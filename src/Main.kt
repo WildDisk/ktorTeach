@@ -7,16 +7,10 @@ import io.ktor.freemarker.FreeMarker
 import io.ktor.gson.gson
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import ru.wilddisk.api.api
 import ru.wilddisk.controller.hello
-import ru.wilddisk.controller.json
-import ru.wilddisk.model.User
-import java.time.LocalDateTime
+import ru.wilddisk.jwtConfig.generateToken
 
-
-
-val jsonResponse = User("userName", "userName@email.com", LocalDateTime.now())
-
-val users = mutableListOf(jsonResponse)
 
 /**
  * Creating embedded server on 8080 port
@@ -32,6 +26,7 @@ fun main() {
             templateLoader = ClassTemplateLoader(this::class.java.classLoader, "templates")
         }
         hello()
-        json()
+        api()
+        generateToken()
     }.start(true)
 }
