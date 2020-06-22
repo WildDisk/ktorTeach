@@ -54,8 +54,8 @@ fun foo() {
 }
 ```
 
-## JSON
-Возвращение json
+## API
+Возвращение json на основе `gson`
 
 ```groovy
 dependency {
@@ -77,3 +77,16 @@ fun foo() {
     }
 }
 ```
+
+## JWT
+Генерация Web токена
+
+![generate_token](./imageResources/generate_token.PNG)
+
+Обращение к API
+
+В заголовке в качестве `Authoriation` указываем `Bearer Token`
+
+![header_authorization](./imageResources/header_authorization.PNG)
+
+![accessing_api](./imageResources/accessing_api.PNG)
