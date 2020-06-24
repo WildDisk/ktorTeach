@@ -14,7 +14,7 @@
     <form action="/" method="post">
         <div>
             <label>
-                <input type="text" name="name" placeholder="name" class="form-control">
+                <input type="text" name="username" placeholder="username" class="form-control">
             </label>
         </div>
         <div>

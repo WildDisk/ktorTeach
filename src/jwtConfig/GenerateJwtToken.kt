@@ -7,7 +7,7 @@ import io.ktor.response.respond
 import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.routing.routing
-import ru.wilddisk.model.User
+import data.model.User
 
 /**
  * Web token generation

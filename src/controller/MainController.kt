@@ -9,9 +9,8 @@ import io.ktor.response.respondRedirect
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
-import ru.wilddisk.model.User
+import data.model.User
 import ru.wilddisk.util.users
-import java.time.LocalDateTime
 
 /**
  * Function responsible for using the freemarker template and sending entrance data
@@ -24,12 +23,13 @@ fun Application.hello() {
         post {
             val postValue = call.receiveParameters()
             users.add(
-                User(
-                    postValue["name"].toString(),
-                    postValue["password"].toString(),
-                    postValue["email"].toString(),
-                    LocalDateTime.now()
-                )
+                User.Build()
+                    .username(postValue["username"])
+                    .password(postValue["password"])
+                    .firstName(postValue["firstName"])
+                    .lastName(postValue["lastName"])
+                    .email(postValue["email"])
+                    .build()
             )
             call.respondRedirect("/")
         }

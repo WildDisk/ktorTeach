@@ -9,6 +9,7 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import ru.wilddisk.api.api
 import ru.wilddisk.controller.hello
+import ru.wilddisk.data.db.connectionDatabase
 import ru.wilddisk.jwtConfig.generateToken
 
 
@@ -25,6 +26,7 @@ fun main() {
         install(FreeMarker) {
             templateLoader = ClassTemplateLoader(this::class.java.classLoader, "templates")
         }
+        connectionDatabase()
         hello()
         api()
         generateToken()
