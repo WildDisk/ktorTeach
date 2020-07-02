@@ -1,22 +1,26 @@
-package ru.wilddisk.data
+package ru.wilddisk.data.repository
 
-import data.model.User
 import data.entity.Users
-import io.ktor.application.Application
+import data.model.User
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.wilddisk.migration.Roles
 import ru.wilddisk.model.Role
 
-fun Application.getAllUsers(): List<User> {
-    val users = mutableListOf<User>()
-    transaction {
-        Users.selectAll().forEach { user ->
+class UserRepository() {
+    fun allUsers(): List<User> {
+        val users = mutableListOf<User>()
+        transaction {
+            Users.selectAll().toList()
+        }.forEach { user ->
             val roles = mutableSetOf<Role>()
-            Roles.selectAll().forEach { role ->
-                when {
-                    user[Users.id] == role[Roles.userId] -> roles.add(Role.valueOf(role[Roles.role]))
-                }
+            transaction {
+                (Users leftJoin Roles).slice(Roles.role)
+                    .select { Roles.userId eq user[Users.id] }
+                    .toList()
+            }.forEach { role ->
+                roles.add(Role.valueOf(role[Roles.role]))
             }
             users.add(
                 User.Build()
@@ -30,6 +34,6 @@ fun Application.getAllUsers(): List<User> {
                     .build()
             )
         }
+        return users
     }
-    return users
 }

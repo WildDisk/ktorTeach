@@ -3,7 +3,7 @@ package ru.wilddisk.jwtConfig
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import data.model.User
+import data.model.AuthorizedUser
 import java.util.*
 
 object JwtConfig {
@@ -15,7 +15,7 @@ object JwtConfig {
         .require(algorithm)
         .withIssuer(issuer)
         .build()
-    fun generateToken(user: User): String = JWT.create()
+    fun generateToken(user: AuthorizedUser): String = JWT.create()
         .withSubject("Authentication")
         .withIssuer(issuer)
         .withClaim("username", user.username)

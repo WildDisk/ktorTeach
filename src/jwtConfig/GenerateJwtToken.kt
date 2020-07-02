@@ -1,5 +1,6 @@
 package ru.wilddisk.jwtConfig
 
+import data.model.AuthorizedUser
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.request.receive
@@ -16,7 +17,7 @@ fun Application.generateToken() {
     routing {
         route("/api/") {
             post("generate_token") {
-                val user = call.receive<User>()
+                val user = call.receive<AuthorizedUser>()
                 val token = JwtConfig.generateToken(user)
                 call.respond(token)
             }
