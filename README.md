@@ -85,7 +85,7 @@ fun foo() {
 
 Обращение к API
 
-В заголовке в качестве `Authoriation` указываем `Bearer Token`
+В заголовке в качестве `Authorization` указываем `Bearer Token`
 
 ![header_authorization](./imageResources/header_authorization.PNG)
 

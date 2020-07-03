@@ -11,6 +11,8 @@ import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.routing.routing
 import org.jetbrains.exposed.sql.transactions.transaction
+import ru.wilddisk.data.repository.UserById
+import ru.wilddisk.data.repository.UserSave
 import ru.wilddisk.data.repository.UserRepository
 import ru.wilddisk.jwtConfig.jwtApplication
 
@@ -28,19 +30,20 @@ fun Application.api() {
                 }
                 get("user/{id}") {
                     val id = call.parameters["id"]?.toLong() ?: 0
-                    call.respond(User().user(id) ?: mapOf("User not found" to false))
+                    call.respond(UserById(id).findUser() ?: mapOf("User not found" to false))
                 }
                 post("user") {
                     try {
                         val post = call.receive<User>()
-                        User.Build()
-                            .username(post.username)
-                            .password(post.password)
-                            .firstName(post.firstName)
-                            .lastName(post.lastName)
-                            .email(post.email)
-                            .build()
-                            .createUser()
+                        UserSave(
+                            User(
+                                post.username,
+                                post.password,
+                                post.firstName,
+                                post.lastName,
+                                post.email
+                            )
+                        ).execute()
                         call.respond(mapOf("ok" to true))
                     } catch (e: Exception) {
                         call.respond(mapOf(e.localizedMessage to false))

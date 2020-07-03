@@ -10,6 +10,7 @@ import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
 import data.model.User
+import ru.wilddisk.data.repository.UserRepository
 import ru.wilddisk.util.users
 
 /**
@@ -18,18 +19,23 @@ import ru.wilddisk.util.users
 fun Application.hello() {
     routing {
         get("/") {
-            call.respond(FreeMarkerContent("hello.ftl", mapOf("user" to users[0], "users" to users)))
+            call.respond(
+                FreeMarkerContent(
+                    "hello.ftl",
+                    mapOf("user" to UserRepository().allUsers()[0], "users" to UserRepository().allUsers())
+                )
+            )
         }
         post {
             val postValue = call.receiveParameters()
             users.add(
-                User.Build()
-                    .username(postValue["username"])
-                    .password(postValue["password"])
-                    .firstName(postValue["firstName"])
-                    .lastName(postValue["lastName"])
-                    .email(postValue["email"])
-                    .build()
+                User(
+                    postValue["username"].toString(),
+                    postValue["password"].toString(),
+                    postValue["firstName"],
+                    postValue["lastName"],
+                    postValue["email"].toString()
+                )
             )
             call.respondRedirect("/")
         }

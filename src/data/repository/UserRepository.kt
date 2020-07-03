@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import ru.wilddisk.migration.Roles
 import ru.wilddisk.model.Role
 
-class UserRepository() {
+class UserRepository {
     fun allUsers(): List<User> {
         val users = mutableListOf<User>()
         transaction {
@@ -23,15 +23,15 @@ class UserRepository() {
                 roles.add(Role.valueOf(role[Roles.role]))
             }
             users.add(
-                User.Build()
-                    .id(user[Users.id])
-                    .username(user[Users.username])
-                    .password(user[Users.password])
-                    .firstName(user[Users.firstName])
-                    .lastName(user[Users.lastName])
-                    .email(user[Users.email])
-                    .role(roles)
-                    .build()
+                User(
+                    user[Users.id],
+                    user[Users.username],
+                    user[Users.password],
+                    user[Users.firstName],
+                    user[Users.lastName],
+                    user[Users.email],
+                    roles
+                )
             )
         }
         return users
