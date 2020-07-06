@@ -30,7 +30,7 @@ fun Application.api() {
                 }
                 get("user/{id}") {
                     val id = call.parameters["id"]?.toLong() ?: 0
-                    call.respond(UserById(id).findUser() ?: mapOf("User not found" to false))
+                    call.respond(UserById(id).find() ?: mapOf("User not found" to false))
                 }
                 post("user") {
                     try {
@@ -43,7 +43,7 @@ fun Application.api() {
                                 post.lastName,
                                 post.email
                             )
-                        ).execute()
+                        ).save()
                         call.respond(mapOf("ok" to true))
                     } catch (e: Exception) {
                         call.respond(mapOf(e.localizedMessage to false))

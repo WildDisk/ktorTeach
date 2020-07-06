@@ -1,18 +1,19 @@
 package data.model
 
 import io.ktor.auth.Principal
-import ru.wilddisk.data.IUser
+import ru.wilddisk.auth.Auth
+import ru.wilddisk.data.repository.IUser
 import ru.wilddisk.model.Role
 
-open class User(
+data class User(
     val id: Long? = null,
     val username: String,
     val password: String,
     val firstName: String? = null,
     val lastName: String? = null,
-    val email: String,
+    val email: String? = null,
     val role: Set<Role> = setOf(Role.USER)
-) : Principal, IUser {
+) : Principal, IUser, Auth {
     constructor() : this(
         id = null,
         username = "",
@@ -21,12 +22,17 @@ open class User(
         lastName = null,
         email = ""
     )
+    constructor(username: String, password: String) : this(
+        id = null,
+        username = username,
+        password = password
+    )
     constructor(
         username: String,
         password: String,
         firstName: String?,
         lastName: String?,
-        email: String
+        email: String?
     ) : this(
         id = null,
         username = username,
@@ -35,5 +41,10 @@ open class User(
         lastName = lastName,
         email = email
     )
-    override fun execute() {}
+
+    override fun find(): User? = null
+
+    override fun save() {}
+
+    override fun update() {}
 }

@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import data.model.AuthorizedUser
+import data.model.User
 import java.util.*
 
 object JwtConfig {
@@ -15,7 +16,7 @@ object JwtConfig {
         .require(algorithm)
         .withIssuer(issuer)
         .build()
-    fun generateToken(user: AuthorizedUser): String = JWT.create()
+    fun generateToken(user: User): String = JWT.create()
         .withSubject("Authentication")
         .withIssuer(issuer)
         .withClaim("username", user.username)

@@ -17,7 +17,7 @@ fun Application.generateToken() {
     routing {
         route("/api/") {
             post("generate_token") {
-                val user = call.receive<AuthorizedUser>()
+                val user = call.receive<User>()
                 val token = JwtConfig.generateToken(user)
                 call.respond(token)
             }

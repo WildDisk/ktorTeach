@@ -58,5 +58,8 @@ dependencies {
     //PostgreSQL
     runtimeOnly "org.postgresql:postgresql:42.1.4"
 
+    //BCrypt
+    implementation "org.mindrot:jbcrypt:0.4"
+
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
 }

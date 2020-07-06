@@ -2,18 +2,21 @@ package ru.wilddisk.data.repository
 
 import data.entity.Users
 import data.model.User
+import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class UserById(
-    private val userId: Long,
-    private val user: User = User(userId, "", "", null, null, "")
-): IUser by user {
+class UserByName(
+    private val user: User = User("", "")
+) : IUser by user {
     override fun find(): User? {
-        var desiredUser: User = user
+        var desiredUser = user
         val roles = RolesForUser(user).roles()
         transaction {
-            Users.select { Users.id eq (user.id ?: -1) }.toList()
+            Users.select { Users.username eq user.username }
+                .andWhere { Users.username eq user.username }
+                .andWhere { Users.password eq user.password }
+                .toList()
         }.forEach {
             desiredUser = User(
                 it[Users.id],
