@@ -2,7 +2,6 @@ package ru.wilddisk.data.repository
 
 import data.entity.Users
 import data.model.User
-import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -13,10 +12,7 @@ class UserByName(
         var desiredUser = user
         val roles = RolesForUser(user).roles()
         transaction {
-            Users.select { Users.username eq user.username }
-                .andWhere { Users.username eq user.username }
-                .andWhere { Users.password eq user.password }
-                .toList()
+            Users.select { Users.username eq user.username }.toList()
         }.forEach {
             desiredUser = User(
                 it[Users.id],

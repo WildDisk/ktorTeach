@@ -5,6 +5,7 @@ import data.model.User
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+import ru.wilddisk.auth.BcryptHash
 import ru.wilddisk.migration.Roles
 import ru.wilddisk.model.Role
 
@@ -16,7 +17,7 @@ class UserSave(private val user: User) : IUser by user {
             else -> transaction {
                 Users.insert {
                     it[username] = user.username
-                    it[password] = user.password
+                    it[password] = BcryptHash.hashPassword(user.password)
                     it[firstName] = user.firstName ?: ""
                     it[lastName] = user.lastName ?: ""
                     it[email] = user.email ?: ""
