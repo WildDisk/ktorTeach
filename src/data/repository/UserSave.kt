@@ -14,17 +14,20 @@ class UserSave(private val user: User) : IUser by user {
         when {
             user.username.isEmpty() -> throw RuntimeException("Username must not be empty!")
             user.password.isEmpty() -> throw RuntimeException("Password must not be empty!")
+            user.email.isNullOrEmpty() -> throw RuntimeException("Email must not be empty!")
             else -> transaction {
                 Users.insert {
                     it[username] = user.username
                     it[password] = BcryptHash.hashPassword(user.password)
                     it[firstName] = user.firstName ?: ""
                     it[lastName] = user.lastName ?: ""
-                    it[email] = user.email ?: ""
+                    it[email] = user.email
                 }
-                Roles.insert {
-                    it[userId] = Users.select { Users.username eq user.username }.single()[Users.id]
-                    it[role] = Role.USER.toString()
+                user.role.forEach { roleItem ->
+                    Roles.insert {
+                        it[userId] = Users.select { Users.username eq user.username }.single()[Users.id]
+                        it[role] = roleItem.name
+                    }
                 }
             }
         }

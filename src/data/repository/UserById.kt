@@ -6,8 +6,7 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class UserById(
-    private val userId: Long,
-    private val user: User = User(userId, "", "", null, null, "")
+    private val user: User = User()
 ): IUser by user {
     override fun find(): User? {
         var desiredUser: User = user

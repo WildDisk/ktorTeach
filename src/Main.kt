@@ -1,10 +1,8 @@
 package ru.wilddisk
 
-import freemarker.cache.ClassTemplateLoader
 import io.ktor.application.install
 import io.ktor.features.CORS
 import io.ktor.features.ContentNegotiation
-import io.ktor.freemarker.FreeMarker
 import io.ktor.gson.gson
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
@@ -25,9 +23,6 @@ fun main() {
             gson {
                 setPrettyPrinting()
             }
-        }
-        install(FreeMarker) {
-            templateLoader = ClassTemplateLoader(this::class.java.classLoader, "templates")
         }
         install(CORS) {
             method(HttpMethod.Options)

@@ -3,7 +3,10 @@ package ru.wilddisk.api
 import data.model.User
 import io.ktor.application.Application
 import io.ktor.application.call
+import io.ktor.application.install
 import io.ktor.auth.authenticate
+import io.ktor.features.ContentNegotiation
+import io.ktor.gson.gson
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.get
@@ -12,6 +15,7 @@ import io.ktor.routing.route
 import io.ktor.routing.routing
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.wilddisk.data.repository.UserById
+import ru.wilddisk.data.repository.UserByName
 import ru.wilddisk.data.repository.UserSave
 import ru.wilddisk.data.repository.UserRepository
 import ru.wilddisk.jwtConfig.jwtApplication
@@ -29,8 +33,17 @@ fun Application.api() {
                     call.respond(UserRepository().allUsers())
                 }
                 get("user/{id}") {
-                    val id = call.parameters["id"]?.toLong() ?: 0
-                    call.respond(UserById(id).find() ?: mapOf("User not found" to false))
+                    try {
+                        val id = call.parameters["id"]?.toLong() ?: 0
+                        call.respond(UserById(User(id = id)).find() ?: mapOf("User not found" to false))
+                    } catch (e: NumberFormatException) {
+                        val username = call.parameters["id"]
+                        call.respond(
+                            UserByName(User(username = username.toString())).find() ?: mapOf("User not found" to false)
+                        )
+                    } catch (e: Exception) {
+                        call.respond(mapOf("Something wrong! Pleas contact to support!" to false))
+                    }
                 }
                 post("user") {
                     try {

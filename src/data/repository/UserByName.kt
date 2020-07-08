@@ -5,9 +5,7 @@ import data.model.User
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class UserByName(
-    private val user: User = User("", "")
-) : IUser by user {
+class UserByName(private val user: User = User()) : IUser by user {
     override fun find(): User? {
         var desiredUser = user
         val roles = RolesForUser(user).roles()
