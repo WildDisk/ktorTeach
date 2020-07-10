@@ -8,10 +8,12 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import ru.wilddisk.api.api
+import ru.wilddisk.api.apiMessage
+import ru.wilddisk.api.apiUser
 import ru.wilddisk.controller.hello
-import ru.wilddisk.data.db.connectionDatabase
+import ru.wilddisk.data.db.ConnectionDatabase
 import ru.wilddisk.jwtConfig.generateToken
+import ru.wilddisk.jwtConfig.jwtApplication
 
 
 /**
@@ -33,9 +35,11 @@ fun main() {
             allowCredentials = true
             anyHost()
         }
-        connectionDatabase()
+        ConnectionDatabase
+        jwtApplication()
         hello()
-        api()
+        apiUser()
+        apiMessage()
         generateToken()
     }.start(true)
 }

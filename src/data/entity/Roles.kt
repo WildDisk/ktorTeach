@@ -1,6 +1,5 @@
-package ru.wilddisk.migration
+package data.entity
 
-import data.entity.Users
 import org.jetbrains.exposed.sql.Table
 
 object Roles : Table() {

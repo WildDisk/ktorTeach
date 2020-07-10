@@ -1,16 +1,16 @@
-package ru.wilddisk.data.repository
+package data.service
 
 import data.entity.Users
-import data.model.User
+import data.model.UserRegistering
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import ru.wilddisk.migration.Roles
+import data.entity.Roles
 import ru.wilddisk.model.Role
 
 class UserRepository {
-    fun allUsers(): List<User> {
-        val users = mutableListOf<User>()
+    fun allUsers(): List<UserRegistering> {
+        val users = mutableListOf<UserRegistering>()
         transaction {
             Users.selectAll().toList()
         }.forEach { user ->
@@ -23,7 +23,7 @@ class UserRepository {
                 roles.add(Role.valueOf(role[Roles.role]))
             }
             users.add(
-                User(
+                UserRegistering(
                     user[Users.id],
                     user[Users.username],
                     user[Users.password],

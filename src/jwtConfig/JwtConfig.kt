@@ -3,8 +3,7 @@ package ru.wilddisk.jwtConfig
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import data.model.AuthorizedUser
-import data.model.User
+import data.model.UserRegistering
 import java.util.*
 
 object JwtConfig {
@@ -16,11 +15,11 @@ object JwtConfig {
         .require(algorithm)
         .withIssuer(issuer)
         .build()
-    fun generateToken(user: User): String = JWT.create()
+    fun generateToken(userRegistering: UserRegistering): String = JWT.create()
         .withSubject("Authentication")
         .withIssuer(issuer)
-        .withClaim("username", user.username)
-        .withClaim("password", user.password)
+        .withClaim("username", userRegistering.username)
+        .withClaim("password", userRegistering.password)
         .withExpiresAt(getExpiration())
         .sign(algorithm)
     private fun getExpiration() = Date(System.currentTimeMillis() + validityInMs)

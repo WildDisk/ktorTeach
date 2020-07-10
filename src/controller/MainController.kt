@@ -9,12 +9,11 @@ import io.ktor.response.respondRedirect
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
-import data.model.User
+import data.model.UserRegistering
 import freemarker.cache.ClassTemplateLoader
 import io.ktor.application.install
 import io.ktor.freemarker.FreeMarker
-import ru.wilddisk.data.repository.UserRepository
-import ru.wilddisk.util.users
+import data.service.UserRepository
 
 /**
  * Function responsible for using the freemarker template and sending entrance data
@@ -35,11 +34,11 @@ fun Application.hello() {
         post {
             val postValue = call.receiveParameters()
             users.add(
-                User(
+                UserRegistering(
                     postValue["username"].toString(),
                     postValue["password"].toString(),
-                    postValue["firstName"],
-                    postValue["lastName"],
+                    postValue["firstName"].toString(),
+                    postValue["lastName"].toString(),
                     postValue["email"].toString()
                 )
             )
@@ -48,3 +47,4 @@ fun Application.hello() {
     }
 }
 
+val users = UserRepository().allUsers().toMutableList()

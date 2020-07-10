@@ -1,12 +1,11 @@
 package ru.wilddisk.auth
 
-import data.model.User
-import ru.wilddisk.data.repository.UserByName
+import data.model.UserRegistering
 
-class LoginUser(private val user: User) : Auth by user {
-    fun login(): User = user.let {
-        val authorizedUser: User = UserByName(user).find() ?: throw UserNotFound
-        BcryptHash.checkPassword(user.password, authorizedUser)
-        authorizedUser
+class LoginUser(private val userRegistering: UserRegistering) {
+    fun login(): UserRegistering = userRegistering.let {
+        val authorizedUserRegistering: UserRegistering =  if (userRegistering.find().id > -1) userRegistering.find() else throw UserNotFound
+        BcryptHash.checkPassword(userRegistering.password, authorizedUserRegistering)
+        authorizedUserRegistering
     }
 }

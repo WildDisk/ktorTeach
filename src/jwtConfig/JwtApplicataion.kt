@@ -1,6 +1,6 @@
 package ru.wilddisk.jwtConfig
 
-import data.model.User
+import data.model.UserRegistering
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.auth.Authentication
@@ -19,7 +19,7 @@ fun Application.jwtApplication() {
                 val name = credentials.payload.getClaim("username").asString()
                 val password = credentials.payload.getClaim("password").asString()
                 if (name != null && password != null) {
-                    LoginUser(User(name, password)).login()
+                    LoginUser(UserRegistering(name, password)).login()
                 } else {
                     null
                 }
