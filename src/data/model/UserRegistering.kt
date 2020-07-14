@@ -9,7 +9,6 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.wilddisk.auth.BcryptHash
-import ru.wilddisk.model.Role
 
 data class UserRegistering(
     val id: Long = -1,
@@ -69,28 +68,21 @@ data class UserRegistering(
     }
 
     override fun save() {
-        when {
-            this.username.isEmpty() -> throw RuntimeException("Username must not be empty!")
-            this.password.isEmpty() -> throw RuntimeException("Password must not be empty!")
-            this.email.isEmpty() -> throw RuntimeException("Password must not be empty!")
-            else -> {
-                transaction {
-                    Users.insert {
-                        it[username] = this@UserRegistering.username
-                        it[password] = BcryptHash.hashPassword(this@UserRegistering.password)
-                        it[firstName] = this@UserRegistering.firstName
-                        it[lastName] = this@UserRegistering.lastName
-                        it[email] = this@UserRegistering.email
-                    }
-                }
-                this.role.forEach { roleItem ->
-                    transaction {
-                        Roles.insert {
-                            it[userId] =
-                                Users.select { Users.username eq this@UserRegistering.username }.single()[Users.id]
-                            it[role] = roleItem.name
-                        }
-                    }
+        transaction {
+            Users.insert {
+                it[username] = this@UserRegistering.username
+                it[password] = BcryptHash.hashPassword(this@UserRegistering.password)
+                it[firstName] = this@UserRegistering.firstName
+                it[lastName] = this@UserRegistering.lastName
+                it[email] = this@UserRegistering.email
+            }
+        }
+        this.role.forEach { roleItem ->
+            transaction {
+                Roles.insert {
+                    it[userId] =
+                        Users.select { Users.username eq this@UserRegistering.username }.single()[Users.id]
+                    it[role] = roleItem.name
                 }
             }
         }

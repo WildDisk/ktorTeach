@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.wilddisk.data.entity.tables
-import ru.wilddisk.model.Role
+import data.model.Role
 
 object ConnectionDatabase {
     init {

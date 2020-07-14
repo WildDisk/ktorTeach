@@ -1,5 +1,6 @@
 package ru.wilddisk
 
+import data.model.Role
 import data.model.UserRegistering
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
@@ -11,7 +12,6 @@ import org.junit.Before
 import org.junit.Test
 import ru.wilddisk.controller.hello
 import ru.wilddisk.data.entity.tables
-import ru.wilddisk.model.Role
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 

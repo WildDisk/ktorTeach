@@ -2,12 +2,12 @@ package data.service
 
 import data.entity.Roles
 import data.entity.Users
+import data.model.Role
 import data.model.UserRegistering
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.orWhere
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
-import ru.wilddisk.model.Role
 
 class RolesForUser(private val userRegistering: UserRegistering) {
     fun roles(): Set<Role> {

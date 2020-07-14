@@ -1,6 +1,7 @@
 package ru.wilddisk.api
 
 import data.model.UserRegistering
+import data.service.UserRepository
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.auth.authenticate
@@ -10,7 +11,6 @@ import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.routing.routing
-import data.service.UserRepository
 import ru.wilddisk.data.service.UserRespond
 
 /**
@@ -48,12 +48,14 @@ fun Application.apiUser() {
                 post("user") {
                     try {
                         val post = call.receive<UserRegistering>()
-                        UserRegistering(
-                            post.username,
-                            post.password,
-                            post.firstName,
-                            post.lastName,
-                            post.email
+                        UserRespond(
+                            UserRegistering(
+                                post.username,
+                                post.password,
+                                post.firstName,
+                                post.lastName,
+                                post.email
+                            )
                         ).save()
                         call.respond(mapOf("ok" to true))
                     } catch (e: Exception) {

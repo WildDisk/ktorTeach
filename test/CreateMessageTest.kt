@@ -1,6 +1,7 @@
 package ru.wilddisk
 
 import com.google.gson.Gson
+import data.model.Role
 import data.model.UserRegistering
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
@@ -20,7 +21,6 @@ import ru.wilddisk.api.apiMessage
 import ru.wilddisk.data.entity.tables
 import ru.wilddisk.jwtConfig.JwtConfig
 import ru.wilddisk.jwtConfig.jwtApplication
-import ru.wilddisk.model.Role
 import kotlin.test.assertEquals
 
 class CreateMessageTest {

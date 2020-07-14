@@ -1,6 +1,7 @@
 package ru.wilddisk
 
 import com.google.gson.Gson
+import data.model.Role
 import data.model.UserRegistering
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
@@ -20,7 +21,6 @@ import ru.wilddisk.api.apiUser
 import ru.wilddisk.data.entity.tables
 import ru.wilddisk.jwtConfig.JwtConfig
 import ru.wilddisk.jwtConfig.jwtApplication
-import ru.wilddisk.model.Role
 import kotlin.test.assertEquals
 
 class UserRegisteringTest {
@@ -155,7 +155,67 @@ class UserRegisteringTest {
             assertEquals(HttpStatusCode.OK, response.status())
             assertEquals(
                 Gson().toJson(
-                    mapOf("Password must not be empty!" to false)
+                    mapOf("User with that email already exists!" to false)
+                ).toString().replace("\n", " ").replace(" ", ""),
+                response.content?.replace("\n", "")?.replace(" ", "")
+            )
+        }
+    }
+
+    @Test
+    fun `User with username already exists`(): Unit = withTestApplication {
+        application.install(ContentNegotiation) {
+            gson { setPrettyPrinting() }
+        }
+        application.jwtApplication()
+        application.apiUser()
+        handleRequest(HttpMethod.Post, "/api/user") {
+            addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering("admin", "admin"))}")
+            setBody("""
+                {
+                    "username":"admin",
+                    "password":"password",
+                    "firstName":"Василий",
+                    "lastName":"Стрельников",
+                    "email":"admin@example.com"
+                }
+            """.trimIndent())
+        }.apply {
+            assertEquals(HttpStatusCode.OK, response.status())
+            assertEquals(
+                Gson().toJson(
+                    mapOf("User with that username already exists!" to false)
+                ).toString().replace("\n", " ").replace(" ", ""),
+                response.content?.replace("\n", "")?.replace(" ", "")
+            )
+        }
+    }
+
+    @Test
+    fun `User with email already exists`(): Unit = withTestApplication {
+        application.install(ContentNegotiation) {
+            gson { setPrettyPrinting() }
+        }
+        application.jwtApplication()
+        application.apiUser()
+        handleRequest(HttpMethod.Post, "/api/user") {
+            addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering("admin", "admin"))}")
+            setBody("""
+                {
+                    "username":"admins",
+                    "password":"password",
+                    "firstName":"Василий",
+                    "lastName":"Стрельников",
+                    "email":"admin@example.com"
+                }
+            """.trimIndent())
+        }.apply {
+            assertEquals(HttpStatusCode.OK, response.status())
+            assertEquals(
+                Gson().toJson(
+                    mapOf("User with that email already exists!" to false)
                 ).toString().replace("\n", " ").replace(" ", ""),
                 response.content?.replace("\n", "")?.replace(" ", "")
             )
@@ -239,7 +299,7 @@ class UserRegisteringTest {
             assertEquals(HttpStatusCode.OK, response.status())
             assertEquals(
                 Gson().toJson(
-                    mapOf("User not found" to false)
+                    mapOf("User not found!" to false)
                 ).toString().replace("\n", " ").replace(" ", ""),
                 response.content?.replace("\n", "")?.replace(" ", "")
             )

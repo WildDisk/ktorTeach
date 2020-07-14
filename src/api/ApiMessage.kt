@@ -1,6 +1,7 @@
 package ru.wilddisk.api
 
 import data.model.UserRegistering
+import data.service.MessageSave
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.auth.authenticate
@@ -11,7 +12,6 @@ import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.routing.routing
 import ru.wilddisk.data.model.Message
-import data.service.MessageSave
 import ru.wilddisk.data.service.UpdateMessageStatus
 
 /**

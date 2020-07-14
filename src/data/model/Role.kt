@@ -1,4 +1,4 @@
-package ru.wilddisk.model
+package data.model
 
 enum class Role {
     USER, ADMIN

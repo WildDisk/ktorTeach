@@ -1,7 +1,12 @@
 package ru.wilddisk.controller
 
+import data.model.UserRegistering
+import data.service.UserRepository
+import freemarker.cache.ClassTemplateLoader
 import io.ktor.application.Application
 import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.freemarker.FreeMarker
 import io.ktor.freemarker.FreeMarkerContent
 import io.ktor.request.receiveParameters
 import io.ktor.response.respond
@@ -9,11 +14,6 @@ import io.ktor.response.respondRedirect
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
-import data.model.UserRegistering
-import freemarker.cache.ClassTemplateLoader
-import io.ktor.application.install
-import io.ktor.freemarker.FreeMarker
-import data.service.UserRepository
 
 /**
  * Function responsible for using the freemarker template and sending entrance data
