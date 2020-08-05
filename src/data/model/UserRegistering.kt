@@ -8,6 +8,7 @@ import io.ktor.auth.Principal
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 import ru.wilddisk.auth.BcryptHash
 
 data class UserRegistering(
@@ -19,27 +20,6 @@ data class UserRegistering(
     val email: String = "",
     val role: Set<Role> = setOf(Role.USER)
 ) : Principal, User {
-    constructor(username: String, password: String) : this(
-        id = -1,
-        username = username,
-        password = password
-    )
-
-    constructor(
-        username: String,
-        password: String,
-        firstName: String,
-        lastName: String,
-        email: String
-    ) : this(
-        id = -1,
-        username = username,
-        password = password,
-        firstName = firstName,
-        lastName = lastName,
-        email = email
-    )
-
     override fun find(): UserRegistering {
         var desiredUser = UserRegistering()
         when {
@@ -88,5 +68,14 @@ data class UserRegistering(
         }
     }
 
-    override fun update() {}
+    override fun update(profile: UserRegistering) {
+        transaction {
+            Users.update({ Users.id eq if (profile.id > -1) profile.id else id }) {
+                it[password] = BcryptHash.hashPassword(profile.password)
+                it[firstName] = profile.firstName
+                it[lastName] = profile.lastName
+                it[email] = profile.email
+            }
+        }
+    }
 }

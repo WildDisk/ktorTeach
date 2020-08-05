@@ -5,6 +5,7 @@ import data.service.UserRepository
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.auth.authenticate
+import io.ktor.auth.authentication
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.get
@@ -18,45 +19,94 @@ import ru.wilddisk.data.service.UserRespond
  */
 fun Application.apiUser() {
     routing {
-        authenticate {
-            route("/api/") {
-                get("users") {
-                    call.respond(UserRepository().allUsers())
+        route("/api/") {
+            /**
+             * create new user
+             */
+            post("user") {
+                try {
+                    val post = call.receive<UserRegistering>()
+                    UserRespond(
+                        UserRegistering(
+                            username = post.username,
+                            password = post.password,
+                            firstName = post.firstName,
+                            lastName = post.lastName,
+                            email = post.email
+                        )
+                    ).save()
+                    call.respond(mapOf("ok" to true))
+                } catch (e: Exception) {
+                    call.respond(mapOf(e.localizedMessage to false))
                 }
-                get("user/{id}") {
-                    val id = call.parameters["id"]
+            }
+            authenticate {
+                /**
+                 * all users only ADMIN
+                 */
+                get("users") {
                     try {
                         call.respond(
-                            UserRespond(
-                                try {
-                                    UserRegistering(id = id?.toLong() ?: -1)
-                                } catch (e: NumberFormatException) {
-                                    when {
-                                        UserRegistering(username = id.toString()).find().id > (-1).toLong() ->
-                                            UserRegistering(username = id.toString())
-                                        UserRegistering(email = id.toString()).find().id > (-1).toLong() ->
-                                            UserRegistering(email = id.toString())
-                                        else -> UserRegistering(id = -1)
-                                    }
-                                }
-                            ).find()
+                            UserRepository(
+                                UserRespond(
+                                    call.authentication.principal() ?: UserRegistering()
+                                ).find()
+                            ).allUsers()
                         )
                     } catch (e: Exception) {
                         call.respond(mapOf(e.localizedMessage to false))
                     }
                 }
-                post("user") {
+                /**
+                 * user profile on id
+                 */
+                get("user/{id}") {
+                    val id = call.parameters["id"] ?: ""
+                    try {
+                        call.respond(UserRespond().findOnId(id))
+                    } catch (e: Exception) {
+                        call.respond(mapOf(e.localizedMessage to false))
+                    }
+                }
+                /**
+                 * update user profile authorization user
+                 */
+                post("user_profile_update") {
                     try {
                         val post = call.receive<UserRegistering>()
                         UserRespond(
+                            call.authentication.principal() ?: UserRegistering()
+                        ).update(
                             UserRegistering(
-                                post.username,
-                                post.password,
-                                post.firstName,
-                                post.lastName,
-                                post.email
+                                username = post.username,
+                                password = post.password,
+                                firstName = post.firstName,
+                                lastName = post.lastName,
+                                email = post.email
                             )
-                        ).save()
+                        )
+                        call.respond(mapOf("ok" to true))
+                    } catch (e: Exception) {
+                        call.respond(mapOf(e.localizedMessage to false))
+                    }
+                }
+                /**
+                 * edit users profile for admin
+                 */
+                post("update_user_profile_admin") {
+                    try {
+                        val post = call.receive<UserRegistering>()
+                        UserRespond(
+                            call.authentication.principal() ?: UserRegistering()
+                        ).updateUserProfileAdmin(
+                            UserRegistering(
+                                id = post.id,
+                                password = post.password,
+                                firstName = post.firstName,
+                                lastName = post.lastName,
+                                email = post.email
+                            )
+                        )
                         call.respond(mapOf("ok" to true))
                     } catch (e: Exception) {
                         call.respond(mapOf(e.localizedMessage to false))

@@ -5,5 +5,5 @@ import data.model.UserRegistering
 interface User {
     fun find(): UserRegistering
     fun save()
-    fun update()
+    fun update(profile: UserRegistering)
 }

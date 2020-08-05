@@ -14,6 +14,7 @@ import io.ktor.response.respondRedirect
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
+import ru.wilddisk.data.service.UserRespond
 
 /**
  * Function responsible for using the freemarker template and sending entrance data
@@ -27,24 +28,29 @@ fun Application.hello() {
             call.respond(
                 FreeMarkerContent(
                     "hello.ftl",
-                    mapOf("user" to UserRepository().allUsers()[0], "users" to UserRepository().allUsers())
+                    mapOf(
+                        "user" to UserRegistering(id = 2).find(),
+                        "users" to UserRepository(UserRegistering(id = 1).find()).allUsers()
+                    )
                 )
             )
         }
         post {
             val postValue = call.receiveParameters()
-            users.add(
-                UserRegistering(
-                    postValue["username"].toString(),
-                    postValue["password"].toString(),
-                    postValue["firstName"].toString(),
-                    postValue["lastName"].toString(),
-                    postValue["email"].toString()
-                )
-            )
-            call.respondRedirect("/")
+            try {
+                UserRespond(
+                    UserRegistering(
+                        username = postValue["username"] ?: "",
+                        password = postValue["password"] ?: "",
+                        firstName = postValue["firstName"] ?: "",
+                        lastName = postValue["lastName"] ?: "",
+                        email = postValue["email"] ?: ""
+                    )
+                ).save()
+                call.respondRedirect("/")
+            } catch (e: Exception) {
+                call.respond(e.localizedMessage)
+            }
         }
     }
 }
-
-val users = UserRepository().allUsers().toMutableList()

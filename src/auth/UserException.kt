@@ -27,3 +27,7 @@ val EmailMustNoBeEmpty = UserException(
     HttpStatusCode.BadRequest,
     "Email must not be empty!"
 )
+val AccessDenied = UserException(
+    HttpStatusCode.Conflict,
+    "Access denied!"
+)

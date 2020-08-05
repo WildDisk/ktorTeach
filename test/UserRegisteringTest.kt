@@ -25,7 +25,7 @@ import kotlin.test.assertEquals
 
 class UserRegisteringTest {
     private val firstUser = UserRegistering(-1, "admin", "admin", "", "", "admin@example.com", setOf(Role.ADMIN, Role.USER))
-    private val secondUser = UserRegistering("username", "password", "", "", "username@example.com")
+    private val secondUser = UserRegistering(username = "username", password = "password", firstName = "", lastName = "", email = "username@example.com")
     private val thirdUser =
         UserRegistering(-1, "newUser", "newuserpassword", "firstNameNewUser", "lastNameNewUser", "newuser@example.com")
     private val availableUsers = listOf(firstUser, secondUser, thirdUser)
@@ -51,7 +51,7 @@ class UserRegisteringTest {
         application.apiUser()
         handleRequest(HttpMethod.Post, "/api/user") {
             addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering("admin", "admin"))}")
+            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering(username = "admin", password = "admin"))}")
             setBody("""
                 {
                     "username":"Василий",
@@ -81,7 +81,7 @@ class UserRegisteringTest {
         application.apiUser()
         handleRequest(HttpMethod.Post, "/api/user") {
             addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering("admin", "admin"))}")
+            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering(username = "admin", password = "admin"))}")
             setBody("""
                 {
                     "username":"",
@@ -111,7 +111,7 @@ class UserRegisteringTest {
         application.apiUser()
         handleRequest(HttpMethod.Post, "/api/user") {
             addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering("admin", "admin"))}")
+            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering(username = "admin", password = "admin"))}")
             setBody("""
                 {
                     "username":"Василий",
@@ -141,7 +141,7 @@ class UserRegisteringTest {
         application.apiUser()
         handleRequest(HttpMethod.Post, "/api/user") {
             addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering("admin", "admin"))}")
+            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering(username = "admin", password = "admin"))}")
             setBody("""
                 {
                     "username":"Василий",
@@ -171,7 +171,7 @@ class UserRegisteringTest {
         application.apiUser()
         handleRequest(HttpMethod.Post, "/api/user") {
             addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering("admin", "admin"))}")
+            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering(username = "admin", password = "admin"))}")
             setBody("""
                 {
                     "username":"admin",
@@ -201,7 +201,7 @@ class UserRegisteringTest {
         application.apiUser()
         handleRequest(HttpMethod.Post, "/api/user") {
             addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering("admin", "admin"))}")
+            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering(username = "admin", password = "admin"))}")
             setBody("""
                 {
                     "username":"admins",
@@ -231,7 +231,7 @@ class UserRegisteringTest {
         application.apiUser()
         handleRequest(HttpMethod.Get, "/api/user/2") {
             addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering("admin", "admin"))}")
+            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering(username = "admin", password = "admin"))}")
         }.apply {
             assertEquals(HttpStatusCode.OK, response.status())
             assertEquals(
@@ -252,7 +252,7 @@ class UserRegisteringTest {
         application.apiUser()
         handleRequest(HttpMethod.Get, "/api/user/newUser") {
             addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering("admin", "admin"))}")
+            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering(username = "admin", password = "admin"))}")
         }.apply {
             assertEquals(HttpStatusCode.OK, response.status())
             assertEquals(
@@ -273,7 +273,7 @@ class UserRegisteringTest {
         application.apiUser()
         handleRequest(HttpMethod.Get, "/api/user/admin@example.com") {
             addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering("admin", "admin"))}")
+            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering(username = "admin", password = "admin"))}")
         }.apply {
             assertEquals(HttpStatusCode.OK, response.status())
             assertEquals(
@@ -294,7 +294,7 @@ class UserRegisteringTest {
         application.apiUser()
         handleRequest(HttpMethod.Get, "/api/user/notFoundUser") {
             addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering("admin", "admin"))}")
+            addHeader(HttpHeaders.Authorization, "Bearer ${JwtConfig.generateToken(UserRegistering(username = "admin", password = "admin"))}")
         }.apply {
             assertEquals(HttpStatusCode.OK, response.status())
             assertEquals(

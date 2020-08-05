@@ -19,7 +19,7 @@ fun Application.jwtApplication() {
                 val name = credentials.payload.getClaim("username").asString()
                 val password = credentials.payload.getClaim("password").asString()
                 if (name != null && password != null) {
-                    LoginUser(UserRegistering(name, password)).login()
+                    LoginUser(UserRegistering(username = name, password = password)).login()
                 } else {
                     null
                 }
